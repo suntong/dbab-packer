@@ -1,0 +1,83 @@
+{
+  "variables": {
+    "DBAB_NEW": "{{env `DBAB_NEW`}}",
+    "host_domain": "",
+    "host_gateway": "",
+    "host_hostname": "",
+    "build_env": "docker",
+    "build_base": "debian:testing-slim",
+    "target_name": "sys/dbab-docker",
+    "target_version": "latest"
+  },
+
+  "builders": [
+    {
+      "type": "docker",
+      "image": "{{user `build_base`}}",
+      "export_path": "dbab-docker.tar"
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "docker-import",
+      "repository": "{{user `target_name`}}",
+      "tag": "{{user `target_version`}}",
+      "changes": [
+	"CMD [\"nginx\", \"-g\", \"daemon off;\"]"
+      ],
+      "only": ["docker"]
+    }
+  ],
+  
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "dbab_new.deb",
+      "destination": "/tmp/dbab_new.deb"
+
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+	"DBAB_NEW={{user `DBAB_NEW`}}",
+        "distro_id={{user `distro_id`}}",
+	"build_env={{user `build_env`}}",
+	"host_domain={{user `host_domain`}}",
+	"host_gateway={{user `host_gateway`}}",
+	"host_hostname={{user `host_hostname`}}",
+        "http_proxy=http://172.17.0.1:3128/",
+	"https_proxy=http://172.17.0.1:3128/"
+      ],
+      "inline": [
+	"printf '\n## Checking...\n' >&2; sleep 1; ",
+	"[ ${host_domain:+T} ] || { printf 'Variable host_domain must be provided >&2' && false; }",
+	"[ ${host_gateway:+T} ] || { printf 'Variable host_gateway must be provided' >&2 && false; }",
+	"cat /etc/os-release",
+	"perl -v",
+	". /etc/os-release",
+	"echo '### Customizing for' $ID:'{{user `distro_id`}}' under $build_env",
+	"env | grep proxy",
+
+	"",
+	"sleep 1; printf '\n## Installing packages...\n' >&2",
+	"apt-get update; apt-get install -y apt-utils; apt-get install -y dnsmasq dbab",
+	"( set -x; [ ${DBAB_NEW:+T} ] && [ -s /tmp/dbab_new.deb ] && dpkg -i /tmp/dbab_new.deb; dpkg -L dbab; cd /; ls -l `dpkg -L dbab`; )",
+
+
+	"sleep 1; printf '\n## Configure DNSmasq...\n' >&2",
+	"( set -x; ls -l /usr/share/doc/dbab/dbab-dnsmasq.*.conf; )",
+	"( set -x; cp -v /usr/share/doc/dbab/dbab-dnsmasq.DNS.conf /etc/dnsmasq.d; sed 's/192.168.2/$host_gateway/; s/EXAMPLE.ORG/$host_domain/;' /usr/share/doc/dbab/dbab-dnsmasq.DHCP.conf > /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; )",
+
+	"sleep 1; printf '\n## Configure dbab...\n' >&2",
+	"echo Update ad blocking list",
+	"( set -x; usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
+	"echo Enable automatic WPAD service",
+	"( set -x; [ ${host_hostname:+T} ] && echo $host_hostname | tee /etc/dbab/dbab.proxy; /usr/sbin/dhcp-add-wpad; )",
+
+	"",
+	"sleep 2; printf '## Done!\n\n' >&2"
+      ]
+    }
+  ]
+}
