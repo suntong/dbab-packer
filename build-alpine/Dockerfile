@@ -20,17 +20,20 @@ LABEL name="$NAME" \
  org.label-schema.description="$DESCRIPTION" \
  org.label-schema.name="$NAME"
 
-#VOLUME ["$SQUID_CACHE_DIR"]
+#VOLUME ["$SQUID_CACHE_DIR" "/etc/dnsmasq.d"]
 
-EXPOSE $SQUID_HTTP_PORT/tcp
+EXPOSE 53/tcp 53/udp $SQUID_HTTP_PORT/tcp
 
 HEALTHCHECK CMD /bin/true || exit 1
 
 ENV http_proxy=$all_proxy \
  https_proxy=$all_proxy
 
-RUN apk add --no-cache squid \
+COPY dbab-docker-start.sh /
+
+RUN apk add --no-cache squid dnsmasq curl \
  && /usr/sbin/squid -z \
+ && echo "conf-dir=/etc/dnsmasq.d,*.conf" > /etc/dnsmasq.conf \
  && true
 
-CMD /usr/sbin/squid -NYCd 1
+CMD /dbab-docker-start.sh
