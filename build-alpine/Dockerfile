@@ -31,9 +31,8 @@ ENV http_proxy=$all_proxy \
 
 COPY dbab-docker-start.sh /
 
-RUN apk add --no-cache squid dnsmasq curl \
+RUN apk add --no-cache squid dnsmasq curl perl \
  && /usr/sbin/squid -z \
- && echo "conf-dir=/etc/dnsmasq.d,*.conf" > /etc/dnsmasq.conf \
  && true
 
 CMD /dbab-docker-start.sh

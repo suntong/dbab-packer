@@ -1,2 +1,4 @@
+printf 'nameserver 127.0.0.1\n' > /etc/resolv.conf
+dnsmasq
 /usr/sbin/squid -NYCd 1 &
-dnsmasq -k &
+/usr/sbin/dbab-svr
