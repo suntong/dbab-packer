@@ -60,14 +60,13 @@
 	"cat /etc/os-release",
 	"# perl -v",
 	". /etc/os-release",
-	"set -x",
 	"[ $ID = alpine ] && etc_squid=/etc/squid",
 	"echo '### Customizing for' $ID under $build_env, with $etc_squid",
 
 	"",
 	"sleep 1; printf '\n## Installing packages...\n' >&2",
 	" apk add --allow-untrusted /tmp/dbab.apk",
-	"( cd /; apk info -L dbab > /tmp/dbab.lst; ls -l `sed 1d /tmp/dbab.lst`; )",
+	"# ( cd /; apk info -L dbab > /tmp/dbab.lst; ls -l `sed 1d /tmp/dbab.lst`; )",
 
 	"sleep 1; printf '\n## Configure DNSmasq...\n' >&2",
 	"# ( set -x; ls -l /usr/share/doc/dbab/dbab-dnsmasq.*.conf; )",
@@ -77,7 +76,7 @@
 	"#echo Update ad blocking list",
 	"( set -x; echo $server_ip | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
 	"echo Enable automatic WPAD service",
-	"( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname,$server_ip | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; )",
+	"( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname,$server_ip | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
 	"echo Configure squid",
 	"# echo 'visible_hostname '$server_hostname.$server_domain > /etc/squid/visible_hostname.conf",
 	"echo 'visible_hostname '$server_hostname > /etc/squid/visible_hostname.conf",
@@ -91,9 +90,7 @@
   "error-cleanup-provisioner": {
     "type": "shell-local",
     "inline": [
-      "set -x",
-      "env",
-      "set"
+      "echo already outside of docker container"
     ]
   }
 }
