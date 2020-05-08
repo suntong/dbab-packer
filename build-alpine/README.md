@@ -6,7 +6,7 @@ A turn key solution as a central LAN server, wrapped in a small docker container
 - Provides DNS, DHCP, [local caching](https://en.wikipedia.org/wiki/Squid) and [ads filtering](https://github.com/suntong/dbab#advantages) services for machines on the LAN
 - All configuration for DNS, DHCP, [local caching](https://en.wikipedia.org/wiki/Squid) and [ads filtering](https://github.com/suntong/dbab#advantages) services are done automatic, or semi-automatic
 - Only less than 55M in image size (53.5MB as we speak)
-- Compressed size is only less than 20MB if uploaded to docker hug (17.36 MB as we speak)
+- Compressed size is only less than 20MB if uploaded to docker hub (17.36 MB as we speak)
 
 
 ## How to build

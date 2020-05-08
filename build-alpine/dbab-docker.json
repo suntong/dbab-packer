@@ -24,7 +24,7 @@
       "repository": "{{user `target_name`}}",
       "tag": "{{user `target_version`}}",
       "changes": [
-	"CMD [\"/start.sh\"]"
+	"CMD /dbab-docker-start.sh"
       ],
       "only": ["docker"]
     }
@@ -39,7 +39,7 @@
     {
       "type": "file",
       "source": "dbab-docker-start.sh",
-      "destination": "/start.sh"
+      "destination": "/dbab-docker-start.sh"
 
     },
     {
