@@ -1,0 +1,54 @@
+{
+  "variables": {
+    "distro_id": "debian",
+    "build_env": "docker",
+    "build_base": "debian:testing-slim",
+    "target_name": "sys/dbab-docker",
+    "target_version": "base"
+  },
+
+  "builders": [
+    {
+      "type": "docker",
+      "image": "{{user `build_base`}}",
+      "export_path": "dbab-docker.tar"
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "docker-import",
+      "repository": "{{user `target_name`}}",
+      "tag": "{{user `target_version`}}",
+      "only": ["docker"]
+    }
+  ],
+  
+  "provisioners": [
+    {
+      "type": "shell",
+      "environment_vars": [
+        "distro_id={{user `distro_id`}}",
+	"build_env={{user `build_env`}}",
+        "http_proxy=http://172.17.0.1:3128/",
+	"https_proxy=http://172.17.0.1:3128/"
+      ],
+      "inline": [
+	"printf '\n## Checking...\n' >&2; sleep 1; ",
+	"cat /etc/os-release",
+	"perl -v",
+	". /etc/os-release",
+	"echo '### Customizing for' $ID:'{{user `distro_id`}}' under $build_env",
+	"env | grep proxy",
+	"curl https://google.com",
+
+	"",
+	"sleep 1; printf '\n## Installing packages...\n' >&2",
+	"apt-get update; ( set -x; apt-get install -y apt-utils; apt-get install -y dnsmasq dbab squid; )",
+
+	"",
+	"sleep 2; printf '## Done!\n\n' >&2"
+      ]
+    }
+  ]
+}

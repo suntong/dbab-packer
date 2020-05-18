@@ -73,13 +73,12 @@
 	"( set -x; cp -v /usr/share/doc/dbab/dbab-dnsmasq.DNS.conf /etc/dnsmasq.d; sed 's/192.168.2/'$server_gateway'/g; s/EXAMPLE.ORG/'$server_domain'/;' /usr/share/doc/dbab/dbab-dnsmasq.DHCP.conf > /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; head -3 /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; )",
 
 	"sleep 1; printf '\n## Configure dbab...\n' >&2",
-	"#echo Update ad blocking list",
+	"echo Update ad blocking list",
 	"( set -x; echo $server_ip | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
 	"echo Enable automatic WPAD service",
 	"( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname,$server_ip | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
 	"echo Configure squid",
-	"# echo 'visible_hostname '$server_hostname.$server_domain > /etc/squid/visible_hostname.conf",
-	"echo 'visible_hostname '$server_hostname > /etc/squid/visible_hostname.conf",
+	"echo 'visible_hostname '$server_hostname > $etc_squid/visible_hostname.conf",
 	"( set -x; cp -v /usr/share/doc/dbab/dbab-squid.*.conf $etc_squid/;  )",
 
 	"",
