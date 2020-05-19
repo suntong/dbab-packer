@@ -1,5 +1,7 @@
 {
   "variables": {
+    "http_proxy": "{{env `http_proxy`}}",
+    "https_proxy": "{{env `https_proxy`}}",
     "server_ip": "",
     "server_domain": "",
     "server_hostname": "",
@@ -46,7 +48,9 @@
     {
       "type": "shell",
       "environment_vars": [
-	"etc_squid=/etc/squid.d",
+	"etc_squid=/etc/squid/conf.d",
+	"http_proxy": "{{user `http_proxy`}}",
+	"https_proxy": "{{user `https_proxy`}}",
 	"build_env={{user `build_env`}}",
 	"server_ip={{user `server_ip`}}",
 	"server_domain={{user `server_domain`}}",
@@ -61,14 +65,15 @@
 	"cat /etc/os-release",
 	"perl -v",
 	". /etc/os-release",
+	"export DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NOWARNINGS=yes",
 	"echo '### Customizing for' $ID under $build_env, with $etc_squid",
 
 	"",
 	"sleep 1; printf '\n## Installing packages...\n' >&2",
 	"mv /etc/dpkg/dpkg.cfg.d/docker /tmp",
 	"apt-get install --reinstall -y dbab",
-	"( set -x; [ -s /tmp/dbab_new.deb ] && dpkg -i /tmp/dbab_new.deb; dpkg -L dbab; cd /; ls -l `dpkg -L dbab`; )",
-	"( cd /; ls -l `dpkg -L dbab` > /dev/null; )",
+	"( set -x; [ -s /tmp/dbab_new.deb ] && dpkg -i /tmp/dbab_new.deb; )",
+	"#( cd /; ls -l `dpkg -L dbab` > /dev/null; )",
 	"mv /tmp/docker /etc/dpkg/dpkg.cfg.d",
 
 
