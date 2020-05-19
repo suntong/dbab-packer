@@ -5,7 +5,7 @@
     "server_hostname": "",
     "build_env": "docker",
     "build_base": "sys/dbab-alpine:base",
-    "target_name": "sys/dbab-docker",
+    "target_name": "sys/dbab-alpine",
     "target_version": "latest"
   },
 

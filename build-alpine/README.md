@@ -16,7 +16,7 @@ Having [setup a static IP and a second IP](https://github.com/suntong/dbab/wiki/
 ```sh
 docker build -t sys/dbab-alpine:base .
 
-packer build -on-error=ask -var server_domain=mine.org -var server_hostname=my-dmz -var server_ip=192.168.0.100 -var target_name=sys/dbab-alpine:latest dbab-docker.json
+packer build -on-error=ask -var server_domain=mine.org -var server_hostname=my-dmz -var server_ip=192.168.0.100 -var target_name=sys/dbab-alpine dbab-docker.json
 ```
 
 on a host with `mine.org` as domain name, and `192.168.0.100` as the second IP, whose host-name will be assigned as `my-dmz`. It will build into a docker image called `sys/dbab-alpine:latest`.

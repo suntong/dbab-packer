@@ -7,7 +7,7 @@
     "server_hostname": "",
     "build_env": "docker",
     "build_base": "sys/dbab-docker:base",
-    "target_name": "sys/dbab-full",
+    "target_name": "sys/dbab-docker",
     "target_version": "latest"
   },
 
@@ -83,7 +83,7 @@
 
 	"sleep 1; printf '\n## Configure dbab...\n' >&2",
 	"echo Update ad blocking list",
-	"( set -x; echo $server_ip | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
+	"( set -x; echo $server_ip | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list; ln -vs /usr/sbin/dbab-get-list /etc/cron.monthly/; )",
 	"echo Enable automatic WPAD service",
 	"( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname,$server_ip | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
 	"echo Configure squid",
