@@ -24,9 +24,11 @@
       "repository": "{{user `target_name`}}",
       "tag": "{{user `target_version`}}",
       "changes": [
-	"CMD /dbab-docker-start.sh"
+        "CMD /dbab-docker-start.sh"
       ],
-      "only": ["docker"]
+      "only": [
+        "docker"
+      ]
     }
   ],
 
@@ -40,52 +42,48 @@
       "type": "file",
       "source": "dbab-docker-start.sh",
       "destination": "/dbab-docker-start.sh"
-
     },
     {
       "type": "shell",
       "environment_vars": [
-	"etc_squid=/etc/squid.d",
-	"build_env={{user `build_env`}}",
-	"server_ip={{user `server_ip`}}",
-	"server_domain={{user `server_domain`}}",
-	"server_hostname={{user `server_hostname`}}"
+        "etc_squid=/etc/squid.d",
+        "build_env={{user `build_env`}}",
+        "server_ip={{user `server_ip`}}",
+        "server_domain={{user `server_domain`}}",
+        "server_hostname={{user `server_hostname`}}"
       ],
       "inline": [
-	"printf '\n## Checking...\n' >&2; sleep 1; ",
-	"[ ${server_hostname:+T} ] || { printf 'Variable server_hostname must be provided' >&2 && false; }",
-	"[ ${server_domain:+T} ] || { printf 'Variable server_domain must be provided' >&2 && false; }",
-	"[ ${server_ip:+T} ] || { printf 'Variable server_ip must be provided' >&2 && false; }",
-	"server_gateway=`echo $server_ip | sed 's/\\.[^.]*$//'`",
-	"cat /etc/os-release",
-	"# perl -v",
-	". /etc/os-release",
-	"[ $ID = alpine ] && etc_squid=/etc/squid",
-	"echo '### Customizing for' $ID under $build_env, with $etc_squid",
-
-	"",
-	"sleep 1; printf '\n## Installing packages...\n' >&2",
-	" apk add --allow-untrusted /tmp/dbab.apk",
-	"# ( cd /; apk info -L dbab > /tmp/dbab.lst; ls -l `sed 1d /tmp/dbab.lst`; )",
-
-	"sleep 1; printf '\n## Configure DNSmasq...\n' >&2",
-	"# ( set -x; ls -l /usr/share/doc/dbab/dbab-dnsmasq.*.conf; )",
-	"( set -x; cp -v /usr/share/doc/dbab/dbab-dnsmasq.DNS.conf /etc/dnsmasq.d; sed 's/192.168.2/'$server_gateway'/g; s/EXAMPLE.ORG/'$server_domain'/;' /usr/share/doc/dbab/dbab-dnsmasq.DHCP.conf > /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; head -3 /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; )",
-
-	"sleep 1; printf '\n## Configure dbab...\n' >&2",
-	"echo Update ad blocking list",
-	"( set -x; echo $server_ip | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
-	"echo Enable automatic WPAD service",
-	"( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname,$server_ip | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
-	"echo Configure squid",
-	"echo 'visible_hostname '$server_hostname > $etc_squid/visible_hostname.conf",
-	"( set -x; cp -v /usr/share/doc/dbab/dbab-squid.*.conf $etc_squid/;  )",
-
-	"",
-	"sleep 2; printf '## Done!\n\n' >&2"
+        "printf '\n## Checking...\n' >&2; sleep 1; ",
+        "[ ${server_hostname:+T} ] || { printf 'Variable server_hostname must be provided' >&2 && false; }",
+        "[ ${server_domain:+T} ] || { printf 'Variable server_domain must be provided' >&2 && false; }",
+        "[ ${server_ip:+T} ] || { printf 'Variable server_ip must be provided' >&2 && false; }",
+        "server_gateway=`echo $server_ip | sed 's/\\.[^.]*$//'`",
+        "cat /etc/os-release",
+        "# perl -v",
+        ". /etc/os-release",
+        "[ $ID = alpine ] && etc_squid=/etc/squid",
+        "echo '### Customizing for' $ID under $build_env, with $etc_squid",
+        "",
+        "sleep 1; printf '\n## Installing packages...\n' >&2",
+        " apk add --allow-untrusted /tmp/dbab.apk",
+        "# ( cd /; apk info -L dbab > /tmp/dbab.lst; ls -l `sed 1d /tmp/dbab.lst`; )",
+        "sleep 1; printf '\n## Configure DNSmasq...\n' >&2",
+        "# ( set -x; ls -l /usr/share/doc/dbab/dbab-dnsmasq.*.conf; )",
+        "( set -x; cp -v /usr/share/doc/dbab/dbab-dnsmasq.DNS.conf /etc/dnsmasq.d; sed 's/192.168.2/'$server_gateway'/g; s/EXAMPLE.ORG/'$server_domain'/;' /usr/share/doc/dbab/dbab-dnsmasq.DHCP.conf > /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; head -3 /etc/dnsmasq.d/dbab-dnsmasq.DHCP.conf; )",
+        "sleep 1; printf '\n## Configure dbab...\n' >&2",
+        "echo Update ad blocking list",
+        "( set -x; echo $server_ip | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
+        "echo Enable automatic WPAD service",
+        "( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname,$server_ip | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
+        "echo Configure squid",
+        "echo 'visible_hostname '$server_hostname > $etc_squid/visible_hostname.conf",
+        "( set -x; cp -v /usr/share/doc/dbab/dbab-squid.*.conf $etc_squid/;  )",
+        "",
+        "sleep 2; printf '## Done!\n\n' >&2"
       ]
     }
   ],
+
   "error-cleanup-provisioner": {
     "type": "shell-local",
     "inline": [
@@ -93,3 +91,4 @@
     ]
   }
 }
+
