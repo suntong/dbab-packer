@@ -29,10 +29,10 @@ docker stop dbab-squid
 docker rm dbab-squid
 
 # build sys/dbab-docker:latest
-packer build -on-error=ask -var server_domain=mine.org -var server_hostname=my-dmz -var server_ip=192.168.0.100 -var target_name=sys/dbab-docker dbab-docker-cust.json
+packer build -on-error=ask -var server_domain=mine.org -var server_hostname_r=my-host -var server_ip_r=192.168.0.101 -var server_hostname_v=my-dmz -var server_ip_v=192.168.0.100 -var target_name=sys/dbab-docker dbab-docker-cust.json
 ```
 
-on a host with `mine.org` as domain name, and `192.168.0.100` as the second IP, whose host-name will be assigned as `my-dmz`. It will build into a docker image called `sys/dbab-docker:latest`.
+on a host named `my-host`, with `mine.org` as domain name, and `192.168.0.100` as the virtual (second) IP, whose host-name will be assigned as `my-dmz`. It will build into a docker image called `sys/dbab-docker:latest`, which will be run under the host  `my-host`, which owns the real (first) static IP, `192.168.0.101`.
 
 The `dbab_new.deb` points to `../../dbab_new.deb`, if it does exist, then this new version will be installed in the docker image as well.
 
