@@ -82,9 +82,9 @@
         "( set -x; echo $server_ip_v | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
         "echo Enable automatic WPAD service",
         "( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname_v,$server_ip_v | tee -a /etc/dnsmasq.d/dbab-dnsmasq.wpad.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
-        "echo Configure squid",
-        "echo 'visible_hostname '$server_hostname_v > $etc_squid/visible_hostname.conf",
-        "( set -x; cp -v /usr/share/doc/dbab/dbab-squid.*.conf $etc_squid/;  )",
+        "#echo Configure squid",
+        "#echo 'visible_hostname '$server_hostname_v > $etc_squid/visible_hostname.conf",
+        "#( set -x; cp -v /usr/share/doc/dbab/dbab-squid.*.conf $etc_squid/;  )",
 
         "",
         "sleep 2; printf '## Done!\n\n' >&2"
