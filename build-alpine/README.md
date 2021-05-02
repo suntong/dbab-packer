@@ -30,7 +30,7 @@ The latest `dbab.apk`, which is required for above build, can be downloaded from
 
 ## How to run
 
-    docker run -d --net=host --cap-add=NET_ADMIN --name dbab-docker --hostname my-dmz sys/dbab-alpine:latest
+    docker run -d --restart=always --net=host --cap-add=NET_ADMIN --name dbab-docker --hostname my-dmz sys/dbab-alpine:latest
 
 after having disabled ***host*** machine's local DNS resolution service. E.g.,
 
