@@ -11,7 +11,12 @@ A turn key solution as a central LAN server, wrapped in a small docker container
 
 ## How to build
 
-Having [setup a static IP and a second IP](https://github.com/suntong/dbab/wiki/Dbab-From-Start-To-Finish#static-ip), and [disabled router's DHCP and DNS services](https://github.com/suntong/dbab-packer#synopsis), run
+Having
+
+- [setup a static IP and a second IP](https://github.com/suntong/dbab/wiki/Dbab-From-Start-To-Finish#static-ip) (theoretically single IP and docker using host networking could also work, but for max protection, separated IP is better), and
+- [disabled router's DHCP and DNS services](https://github.com/suntong/dbab-packer#synopsis) (may also do afterwards)
+
+then run
 
 ```sh
 docker build -t sys/dbab-alpine:base .
