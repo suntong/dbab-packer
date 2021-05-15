@@ -26,7 +26,7 @@ packer build -on-error=ask -var server_domain=mine.org -var server_hostname=my-d
 
 on a host with `mine.org` as domain name, and `192.168.0.100` as the second IP, whose host-name will be assigned as `my-dmz`. It will build into a docker image called `sys/dbab-alpine:latest`.
 
-The latest `dbab.apk`, which is required for above build, can be downloaded from https://bintray.com/suntong/bin/dbab,
+The latest `dbab.apk`, which is required for above build, can be downloaded from dbab release page, like [dbab_1.5.0-1_all.apk](https://github.com/suntong/dbab/releases/download/1.5.01/dbab_1.5.0-1_all.apk).
 
 ## How to run
 
