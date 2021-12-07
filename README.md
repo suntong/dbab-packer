@@ -2,6 +2,13 @@
 
 Packer building template for `dbab` docker container
 
+## Prefix
+
+- This `docker` approach is much simpler than the host-package-installing approach, as everything can be done semi-automatically.
+- And the container approach is much safer in theory too.
+- This has been my default way of using `dbab` and I've been using it for several rounds of new installations now.
+- Thus I'm officially recommending this way as oppose to the host-package-installing approach now, as Debian packaging had always been a frustrating experience again and again for me. So I will update the Debian package for the last time and stop packaging it after 2021.
+
 ## Synopsis
 
 - Optional but highly recommended, build a local `squid` caching docker service
