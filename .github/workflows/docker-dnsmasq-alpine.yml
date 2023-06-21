@@ -1,0 +1,22 @@
+name: Docker dnsmasq-alpine Image CI
+
+on:
+  push:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      working-directory: build-alpine
+      run: |
+        # docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        docker build -t sys/dbab-alpine:base .
+        docker images
