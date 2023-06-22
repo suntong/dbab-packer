@@ -30,11 +30,14 @@ HEALTHCHECK CMD /bin/true || exit 1
 ENV http_proxy=$all_proxy \
  https_proxy=$all_proxy
 
-COPY dbab-docker-start.sh /
+#COPY dbab-docker-start.sh /
+#RUN ln -vs sh /bin/bash
 
 # squid
 RUN apk add --no-cache dnsmasq curl perl \
  && true
 # && /usr/sbin/squid -z \
+RUN apk add --no-cache perl-io-socket-ip --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing
 
-CMD /dbab-docker-start.sh
+#ENTRYPOINT ["/bin/sh"]
+#CMD /dbab-docker-start.sh
