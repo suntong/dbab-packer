@@ -55,6 +55,7 @@
         "etc_squid=/etc/squid.d",
         "server_ip_r={{user `server_ip_r`}}",
         "server_ip_v={{user `server_ip_v`}}",
+        "server_ip_6={{user `server_ip_6`}}",
         "server_domain={{user `server_domain`}}",
         "server_hostname_r={{user `server_hostname_r`}}",
         "server_hostname_v={{user `server_hostname_v`}}"
@@ -66,6 +67,7 @@
         "[ ${server_domain:+T} ] || { printf 'Variable server_domain must be provided' >&2 && false; }",
         "[ ${server_ip_r:+T} ] || { printf 'Variable server_ip_r must be provided' >&2 && false; }",
         "[ ${server_ip_v:+T} ] || { printf 'Variable server_ip_v must be provided' >&2 && false; }",
+        "[ ${server_ip_6:+T} ] || { printf 'Variable server_ip_6 must be provided' >&2 && false; }",
         "server_gateway=`echo $server_ip_v | sed 's/\\.[^.]*$//'`",
         "cat /etc/os-release",
         "# perl -v",
@@ -84,7 +86,7 @@
 
         "sleep 1; printf '\n## Configure dbab...\n' >&2",
         "echo Update ad blocking list",
-        "( set -x; echo $server_ip_v | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
+        "( set -x; printf \"$server_ip_v\n$server_ip_6\n\" | tee /etc/dbab/dbab.addr; /usr/sbin/dbab-get-list; /usr/sbin/dbab-add-list;  )",
         "echo Enable automatic WPAD service",
         "( set -x; /usr/sbin/dhcp-add-wpad; echo host-record=$server_hostname_v,$server_ip_v | tee -a /etc/dnsmasq.d/dbab-dnsmasq.static.conf; printf 'nameserver 127.0.0.1\ndomain '$server_domain'\nsearch '$server_domain'\n' > /etc/resolv.conf.good; cat /etc/resolv.conf.good > /etc/resolv.conf; )",
         "#echo Configure squid",

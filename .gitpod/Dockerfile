@@ -5,7 +5,7 @@ ARG vdbab=1.5.8
 
 # Install pkgs
 USER root
-RUN apt-get update && apt-get install -y iputils-ping packer && packer version
+RUN apt-get update && apt-get install -y iputils-ping bind9-dnsutils packer && packer version
 RUN curl -JLO https://github.com/goreleaser/nfpm/releases/download/v${vnfpm}/nfpm_${vnfpm}_amd64.deb && apt install -y ./nfpm_${vnfpm}_amd64.deb && nfpm -v
 
 # Provide 2nd IP
