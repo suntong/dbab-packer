@@ -11,6 +11,8 @@ Packer building template for `dbab` docker container
 
 ## Synopsis
 
+For building and running `dbab` docker container, check out the [wiki](https://github.com/suntong/dbab-packer/wiki/dbab-within-Alpine-Linux-container). The following are the steps used to be done _manually_.
+
 From using router to using `dbab` container for DHCP & DNS services in 3~5 easy steps:
 
 - Optional but highly recommended, build a local `squid` caching docker service
@@ -34,20 +36,6 @@ From using router to using `dbab` container for DHCP & DNS services in 3~5 easy 
   * Reboot the other machine/device, verify that DHCP and DNS service are still working fine
 
 Viola, `dbab` is now contained in docker container, in "_merely_" 3~5 "_easy_" steps, :). Well, actually every single point can be an essay by itself, which is too wide for me to cover or support. So this intro and this project only focuses on `dbab`, nothing else. Period.
-
-## Build `dbab` docker container
-
-See 
-
-- [Building `dbab` docker container](https://github.com/suntong/dbab-packer/wiki/Building-dbab-docker-container)
-
-The custom-built docker image is a highly customized one as everyone's case is different. Thus there cannot be a one-size-fit-all solution pre-built generic docker image. But the good news is that such semi-automatic container building should be super easy -- you provide the parameters that fit your case, and the container building will be done automatically.
-
-## Start `dbab` docker container
-
-To start `dbab` docker container:
-
-    docker run -d --rm -p 53:53 -p 67:67 --name my-own-dbab --hostname my-dbab-name myid/my-dbab:latest
 
 ## Author(s)
 
